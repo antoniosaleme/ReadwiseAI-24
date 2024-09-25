@@ -1,0 +1,24 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model GeneratedText {
+  id       Int      @id @default(autoincrement())
+  topic    String
+  levelB2  String
+  levelC2  String
+  language String
+  date     DateTime @default(now())
+
+  @@index([topic, date])
+}
+
+model Topic {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+}

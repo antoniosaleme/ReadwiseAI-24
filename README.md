@@ -138,8 +138,3 @@ cron.schedule('0 0 * * *', () => {
   generateDailyContent();
 });
 ```
-
-## License
-
-This project is licensed under the MIT License.
-# ReadwiseAI-24
