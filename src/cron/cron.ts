@@ -11,8 +11,9 @@ const generateContentUseCase = new GenerateContentUseCase(contentService);
 //   console.log('Daily content generation finished.');
 // });
 
+// Run every 3 minutes for testing purposes
 cron.schedule('*/3 * * * *', async () => {
-  console.log('Running content generation...');
+  console.log(`[${new Date().toISOString()}] Running content generation...`);
 
   try {
     await generateContentUseCase.execute();
@@ -21,3 +22,5 @@ cron.schedule('*/3 * * * *', async () => {
     console.error('Error during content generation:', error);
   }
 });
+
+console.log('Cron job has been scheduled.');

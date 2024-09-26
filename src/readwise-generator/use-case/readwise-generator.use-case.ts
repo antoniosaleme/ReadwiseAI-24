@@ -14,7 +14,7 @@ export class GenerateContentUseCase {
     level: 'B2' | 'C2',
     language: string,
   ): Promise<string> {
-    const systemMessage = `Genera un texto en ${language} sobre ${prompt} con un nivel de competencia ${level}.`;
+    const systemMessage = `Generate a text in ${language} about ${prompt} with a ${level} level of competence.`;
     const response = await this.openai.chat.completions.create({
       messages: [
         { role: 'system', content: systemMessage },
