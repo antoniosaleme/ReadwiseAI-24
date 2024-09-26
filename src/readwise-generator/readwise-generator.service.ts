@@ -5,6 +5,10 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class ReadwiseGeneratorService {
+  async getAllGeneratedTexts() {
+    return prisma.generatedText.findMany();
+  }
+
   async findContentByDate(date: string) {
     return prisma.generatedText.findMany({
       where: {

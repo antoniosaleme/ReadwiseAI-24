@@ -11,8 +11,8 @@ const generateContentUseCase = new GenerateContentUseCase(contentService);
 //   console.log('Daily content generation finished.');
 // });
 
-// Run every 3 minutes for testing purposes
-cron.schedule('*/3 * * * *', async () => {
+// Run every 60 minutes for testing purposes
+cron.schedule('*/60 * * * *', async () => {
   console.log(`[${new Date().toISOString()}] Running content generation...`);
 
   try {
