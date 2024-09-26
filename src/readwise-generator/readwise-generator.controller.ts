@@ -9,4 +9,9 @@ export class ReadwiseGeneratorController {
   async getAllGeneratedTexts() {
     return this.generatorService.getAllGeneratedTexts();
   }
+
+  @Get('topics-by-date')
+  async getGeneratedTextsByDate() {
+    return this.generatorService.findContentByDate();
+  }
 }

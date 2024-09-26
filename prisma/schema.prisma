@@ -12,6 +12,8 @@ model GeneratedText {
   topic    String
   levelB2  String
   levelC2  String
+  audioB2  Bytes
+  audioC2  Bytes
   language String
   date     DateTime @default(now())
 
