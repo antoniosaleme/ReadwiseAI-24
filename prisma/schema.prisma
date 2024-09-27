@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:rrXpWNnWMvDGz1Jd@localhost:5432/readwiseai?schema=public"
 }
 
 generator client {
@@ -8,14 +8,16 @@ generator client {
 }
 
 model GeneratedText {
-  id       Int      @id @default(autoincrement())
-  topic    String
-  levelB2  String
-  levelC2  String
-  audioB2  Bytes
-  audioC2  Bytes
-  language String
-  date     DateTime @default(now())
+  id               Int      @id @default(autoincrement())
+  topic            String
+  levelB2          String
+  levelC2          String
+  difficultWordsB2 Json[]
+  difficultWordsC2 Json[]
+  audioB2Url       String
+  audioC2Url       String
+  language         String
+  date             DateTime @default(now())
 
   @@index([topic, date])
 }

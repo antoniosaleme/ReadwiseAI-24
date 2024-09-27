@@ -1,10 +1,25 @@
 import { Injectable } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import { PrismaClient } from '@prisma/client';
+import { GenerateContentUseCase } from './use-case/readwise-generator.use-case';
 
 const prisma = new PrismaClient();
 
 @Injectable()
 export class ReadwiseGeneratorService {
+  constructor(
+    private readonly generateContentUseCase: GenerateContentUseCase,
+  ) {}
+
+  @Cron('*/100 * * * *') async handleCron() {
+    console.log(`[${new Date().toISOString()}] Running content generation...`);
+    try {
+      await this.generateContentUseCase.execute();
+      console.log('Daily content generation finished.');
+    } catch (error) {
+      console.error('Error during content generation:', error);
+    }
+  }
   async getAllGeneratedTexts() {
     return prisma.generatedText.findMany();
   }
@@ -36,8 +51,10 @@ export class ReadwiseGeneratorService {
     topic: string,
     textB2: string,
     textC2: string,
-    audioB2: Buffer,
-    audioC2: Buffer,
+    difficultWordsB2: { word: string; translation: string }[],
+    difficultWordsC2: { word: string; translation: string }[],
+    audioB2Url: string,
+    audioC2Url: string,
     language: string,
   ) {
     return prisma.generatedText.create({
@@ -45,8 +62,10 @@ export class ReadwiseGeneratorService {
         topic,
         levelB2: textB2,
         levelC2: textC2,
-        audioB2,
-        audioC2,
+        difficultWordsB2,
+        difficultWordsC2,
+        audioB2Url,
+        audioC2Url,
         language,
         date: new Date(),
       },
