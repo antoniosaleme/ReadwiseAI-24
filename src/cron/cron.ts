@@ -1,15 +1,30 @@
-import * as cron from 'node-cron';
-import { ReadwiseGeneratorService } from 'src/readwise-generator/readwise-generator.service';
 import { GenerateContentUseCase } from 'src/readwise-generator/use-case';
+import { Injectable } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 
-const contentService = new ReadwiseGeneratorService();
-const generateContentUseCase = new GenerateContentUseCase(contentService);
+@Injectable()
+export class ReadwiseGeneratorService {
+  constructor(
+    private readonly generateContentUseCase: GenerateContentUseCase,
+  ) {}
 
-cron.schedule('0 0 * * *', async () => {
-  console.log('Running daily content generation...');
-  await generateContentUseCase.execute();
-  console.log('Daily content generation finished.');
-});
+  // @Cron('0 0 * * *') // Este cron se ejecutará todos los días a la medianoche
+  // async handleCron() {
+  //   console.log('Running daily content generation...');
+  //   await this.generateContentUseCase.execute();
+  //   console.log('Daily content generation finished.');
+  // }
+  @Cron('*/20 * * * *') async handleCron() {
+    // Este cron se ejecutará cada minuto
+    console.log(`[${new Date().toISOString()}] Running content generation...`);
+    try {
+      await this.generateContentUseCase.execute();
+      console.log('Daily content generation finished.');
+    } catch (error) {
+      console.error('Error during content generation:', error);
+    }
+  }
+}
 
 // Run every 60 minutes for testing purposes
 // cron.schedule('*/2 * * * *', async () => {
