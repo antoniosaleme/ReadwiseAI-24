@@ -11,7 +11,7 @@ export class ReadwiseGeneratorService {
     private readonly generateContentUseCase: GenerateContentUseCase,
   ) {}
 
-  @Cron('*/100 * * * *') async handleCron() {
+  @Cron('0 0 */5 * *') async handleCron() {
     console.log(`[${new Date().toISOString()}] Running content generation...`);
     try {
       await this.generateContentUseCase.execute();
@@ -24,15 +24,22 @@ export class ReadwiseGeneratorService {
     return prisma.generatedText.findMany();
   }
 
+  async findContentByTopic(topic: string) {
+    const results = await this.findContentByDate();
+    const contentByTopic = results.filter((content) => content.topic === topic);
+    return contentByTopic;
+  }
+
   async findContentByDate(date?: string) {
     const today = new Date();
     console.log({ date });
 
     const startOfDay = new Date(date ? date : today);
     startOfDay.setHours(0, 0, 0, 0);
+    startOfDay.setDate(startOfDay.getDate() - 5);
 
     const endOfDay = new Date(startOfDay);
-    endOfDay.setDate(endOfDay.getDate() + 1);
+    endOfDay.setDate(endOfDay.getDate() + 6);
     console.log('date-segundo: ', date);
     console.log({ today });
     console.log('Buscando registros desde:', startOfDay, 'hasta:', endOfDay);

@@ -40,13 +40,6 @@ export class GenerateContentUseCase {
 
         console.log('difficultWordsB2: ', difficultWordsB2);
 
-        // const formattedDifficultWordsB2 = difficultWordsB2.map(
-        //   (wordObj) => `${wordObj.word}: ${wordObj.translation}`,
-        // );
-        // const formattedDifficultWordsC2 = difficultWordsC2.map(
-        //   (wordObj) => `${wordObj.word}: ${wordObj.translation}`,
-        // );
-
         const audioB2Buffer = await this.cloudinaryService.generateAudio(
           textB2,
           'nova',
@@ -137,11 +130,9 @@ export class GenerateContentUseCase {
 
     const result = response.choices[0].message?.content || '';
 
-    // Imprimir el resultado devuelto por OpenAI
     console.log('OpenAI Response:', result);
 
     try {
-      // Intentar parsear el resultado como JSON
       return JSON.parse(result);
     } catch (error) {
       console.error('Failed to parse JSON:', error);
