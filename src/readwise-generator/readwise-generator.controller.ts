@@ -15,8 +15,8 @@ export class ReadwiseGeneratorController {
     return this.generatorService.findContentByDate();
   }
 
-  @Get('topic/:topic')
-  findOne(@Param('term') term: string) {
-    return this.generatorService.findContentByTopic(term);
+  @Get('topic/:slug')
+  findOne(@Param('slug') slug: string) {
+    return this.generatorService.findContentBySlug(slug);
   }
 }

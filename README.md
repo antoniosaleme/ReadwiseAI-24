@@ -138,3 +138,18 @@ cron.schedule('0 0 * * *', () => {
   generateDailyContent();
 });
 ```
+
+
+src/
+├── readwise-generator/
+│   ├── controller/
+│   │   └── readwise-generator.controller.ts
+│   ├── service/
+│   │   └── readwise-generator.service.ts
+│   ├── repository/
+│   │   └── readwise-generator.repository.ts
+│   ├── use-case/
+│   │   └── readwise-generator.use-case.ts
+│   └── dto/
+│       └── readwise-generator.dto.ts
+

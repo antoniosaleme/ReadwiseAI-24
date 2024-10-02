@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { PrismaClient } from '@prisma/client';
 import { GenerateContentUseCase } from './use-case/readwise-generator.use-case';
-
-const prisma = new PrismaClient();
+import { ReadwiseGeneratorRepository } from './repository/readwise-generator.repository';
+import { CreateReadwiseGeneratorDto } from './dto/create-readwise-generator.dto';
 
 @Injectable()
 export class ReadwiseGeneratorService {
   constructor(
     private readonly generateContentUseCase: GenerateContentUseCase,
+    private readonly repository: ReadwiseGeneratorRepository,
   ) {}
 
   @Cron('0 0 */5 * *') async handleCron() {
@@ -20,14 +20,16 @@ export class ReadwiseGeneratorService {
       console.error('Error during content generation:', error);
     }
   }
+
   async getAllGeneratedTexts() {
-    return prisma.generatedText.findMany();
+    return this.repository.findAll();
   }
 
-  async findContentByTopic(topic: string) {
+  async findContentBySlug(slug: string) {
     const results = await this.findContentByDate();
-    const contentByTopic = results.filter((content) => content.topic === topic);
-    return contentByTopic;
+    console.log({ results });
+    const contentBySlug = results.filter((content) => content.slug === slug);
+    return contentBySlug;
   }
 
   async findContentByDate(date?: string) {
@@ -40,42 +42,13 @@ export class ReadwiseGeneratorService {
 
     const endOfDay = new Date(startOfDay);
     endOfDay.setDate(endOfDay.getDate() + 6);
-    console.log('date-segundo: ', date);
-    console.log({ today });
-    console.log('Buscando registros desde:', startOfDay, 'hasta:', endOfDay);
 
-    return prisma.generatedText.findMany({
-      where: {
-        date: {
-          gte: startOfDay,
-          lt: endOfDay,
-        },
-      },
-    });
+    console.log('Searching register from:', startOfDay, 'up to:', endOfDay);
+
+    return this.repository.findByDateRange(startOfDay, endOfDay);
   }
 
-  async saveContent(
-    topic: string,
-    textB2: string,
-    textC2: string,
-    difficultWordsB2: { word: string; translation: string }[],
-    difficultWordsC2: { word: string; translation: string }[],
-    audioB2Url: string,
-    audioC2Url: string,
-    language: string,
-  ) {
-    return prisma.generatedText.create({
-      data: {
-        topic,
-        levelB2: textB2,
-        levelC2: textC2,
-        difficultWordsB2,
-        difficultWordsC2,
-        audioB2Url,
-        audioC2Url,
-        language,
-        date: new Date(),
-      },
-    });
+  async saveContent(createReadwiseGeneratorDto: CreateReadwiseGeneratorDto) {
+    return this.repository.saveContent(createReadwiseGeneratorDto);
   }
 }

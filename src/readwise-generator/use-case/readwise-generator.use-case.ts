@@ -27,6 +27,7 @@ export class GenerateContentUseCase {
 
       for (const topic of TOPICS) {
         const primaryText = await this.generateText(topic, 'de');
+        const slug = slugify(topic);
         const textB2 = await this.generateTextByDifficulty(primaryText, 'B2');
         const textC2 = await this.generateTextByDifficulty(primaryText, 'C2');
         const difficultWordsB2 = await this.getDifficultWordsWithTranslations(
@@ -54,16 +55,17 @@ export class GenerateContentUseCase {
         const audioC2Url =
           await this.cloudinaryService.uploadAudio(audioC2Buffer);
 
-        await this.readwiseGeneratorService.saveContent(
+        await this.readwiseGeneratorService.saveContent({
           topic,
-          textB2,
-          textC2,
+          slug,
+          levelB2: textB2,
+          levelC2: textC2,
           difficultWordsB2,
           difficultWordsC2,
           audioB2Url,
           audioC2Url,
-          'de',
-        );
+          language: 'de',
+        });
       }
       console.log('Daily content generated and saved.');
     } catch (error) {
@@ -136,7 +138,14 @@ export class GenerateContentUseCase {
       return JSON.parse(result);
     } catch (error) {
       console.error('Failed to parse JSON:', error);
-      return []; // Retornar un array vacío si el parseo falla
+      return [];
     }
   }
+}
+
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/ /g, '-')
+    .replace(/[^\w-]+/g, '');
 }

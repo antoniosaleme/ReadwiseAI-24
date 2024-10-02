@@ -1,15 +1,16 @@
-datasource db {
-  provider = "postgresql"
-  url      = "postgresql://postgres:rrXpWNnWMvDGz1Jd@localhost:5432/readwiseai?schema=public"
-}
-
 generator client {
   provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model GeneratedText {
   id               Int      @id @default(autoincrement())
   topic            String
+  slug             String
   levelB2          String
   levelC2          String
   difficultWordsB2 Json[]

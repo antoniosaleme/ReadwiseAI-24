@@ -14,8 +14,8 @@ export class ReadwiseGeneratorService {
   //   await this.generateContentUseCase.execute();
   //   console.log('Daily content generation finished.');
   // }
-  @Cron('*/20 * * * *') async handleCron() {
-    // Este cron se ejecutará cada minuto
+  @Cron('*/2 * * * *') async handleCron() {
+    // Este cron se ejecutará cada 2 minutos
     console.log(`[${new Date().toISOString()}] Running content generation...`);
     try {
       await this.generateContentUseCase.execute();
